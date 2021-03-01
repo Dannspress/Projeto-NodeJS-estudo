@@ -1,7 +1,17 @@
-const express = require('express');
+//INDEX.JS = Sobe servidor no ar
 
-const app = express();
+const customExpress = require('./config/customExpress');
+const conexao = require('./infraestrutura/conexao');
+const Tabelas = require('./infraestrutura/tabelas');
 
-app.listen(3000, () => console.log('Servidor na porta 3000'));
-
-app.get('/atendimentos', (req, res) => res.send('Você está na rota de ATENDIMENTOS! (Realizando um GET)'))
+conexao.connect((erro) => {
+    if(erro) {
+        console.log(erro)
+    } else {
+        console.log("Conectado com SUCESSO")
+        
+        Tabelas.init(conexao);
+        const app = customExpress();
+        app.listen(3000, () => console.log('Servidor na porta 3000'));
+    }
+});
